@@ -148,6 +148,8 @@
 ;	  (csharp-mode . ("omnisharp" "-lsp"))
           ))
   (setq eldoc-echo-area-prefer-doc-buffer t))
+  
+(use-package proof-general)
 
 ;;;(use-package geiser-gauche)
 
