@@ -1,7 +1,7 @@
 ;; Tips to Make Emacs Life Easy:
 ;; -----------------------------
 ;;     - Do not set environment variables inside Emacs.
-;;     - Do not assume well-behaved Unix.
+;;     - Do not assume well-behaving Unix.
 ;;     - Keep Emacs stuff in one file, and one file only.
 ;;     - No updates in normal operation! Make it different from default start-up. (TODO)
 ;;     - Emacs Package store is not dependable; we don't know where it is, and it is cheap to donwload anyway.
@@ -66,10 +66,6 @@
   ;; Will this work on old Emacsen? let's find out!
   (cd (getenv "HOME")))
 
-
-(use-package vc-fossil
-  :config (setq vc-handled-backends '(Fossil)))
-
 (use-package magit)
 
 (use-package helm
@@ -81,22 +77,22 @@
 (use-package popwin
   :config (popwin-mode 1))
 
-(use-package org-roam
-  :config
-  (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-in-direction)
-                 (direction . right)
-                 (window-width . 0.33)
-                 (window-height . fit-window-to-buffer)))
-  (setq org-roam-dailies-directory "daily/")
-  (setq org-roam-dailies-capture-templates
-        '(("d" "default" entry
-           "* %?"
-           :target (file+head "%<%Y-%m-%d>.org"
-			      "#+title: %<%Y-%m-%d>\n"))))
-  (global-set-key (kbd "C-c r") 'org-roam-buffer-toggle)
-  (global-set-key (kbd "C-c t") 'org-roam-alias-add))
+; (use-package org-roam
+  ; :config
+  ; (add-to-list 'display-buffer-alist
+               ; '("\\*org-roam\\*"
+                 ; (display-buffer-in-direction)
+                 ; (direction . right)
+                 ; (window-width . 0.33)
+                 ; (window-height . fit-window-to-buffer)))
+  ; (setq org-roam-dailies-directory "daily/")
+  ; (setq org-roam-dailies-capture-templates
+        ; '(("d" "default" entry
+           ; "* %?"
+           ; :target (file+head "%<%Y-%m-%d>.org"
+			      ; "#+title: %<%Y-%m-%d>\n"))))
+  ; (global-set-key (kbd "C-c r") 'org-roam-buffer-toggle)
+  ; (global-set-key (kbd "C-c t") 'org-roam-alias-add))
 
 
 ;;;(use-package auctex
@@ -110,22 +106,32 @@
   (setq evil-default-state 'emacs)
   (evil-mode 1))
 
-(use-package nim-mode
-  :config
-  ;;;(local-set-key (kbd "M->") 'nim-indent-shift-right)
-  ;;;(local-set-key (kbd "M-<") 'nim-indent-shift-left)
-  (when (string-match "/\.nimble/" (or (buffer-file-name) "")) (read-only-mode 1))
-  (add-hook 'nim-mode-hook 'nimsuggest-mode)
-  (add-hook 'nim-mode-hook 'electric-indent-local-mode))
+;;;(use-package nim-mode
+;;;  :config
+;;;  ;;;(local-set-key (kbd "M->") 'nim-indent-shift-right)
+;;;  ;;;(local-set-key (kbd "M-<") 'nim-indent-shift-left)
+;;;  (when (string-match "/\.nimble/" (or (buffer-file-name) "")) (read-only-mode 1))
+;;;  (add-hook 'nim-mode-hook 'nimsuggest-mode)
+;;;  (add-hook 'nim-mode-hook 'electric-indent-local-mode))
 
-
-(use-package slime
-  ;;:pin nongnu
-  :config
-  (setq inferior-lisp-program "sbcl"))
-
-(use-package rust-mode
+(use-package paredit
   :pin nongnu)
+
+
+; (use-package slime
+  ; :config
+  ; (setq inferior-lisp-program "sbcl"))
+
+;;;(use-package rust-mode)
+
+;;;(use-package go-mode)
+
+;;;(use-package csharp-mode
+;;;  :pin gnu)
+
+;;;(use-package eglot-fsharp
+;;;  :defer t
+;;;  :ensure t)
 
 (use-package eglot
   :pin gnu
@@ -135,15 +141,15 @@
           (c++-mode . ("clangd"))
           (c-mode . ("clangd"))
           (python-mode . ("pyright-python-langserver" "--stdio"))
-          (nim-mode . ("nimlsp"))
-	  (rust-mode . ("rust-analyzer"))
+;         (nim-mode . ("nimlsp"))
+;	  (rust-mode . ("rust-analyzer"))
+;	  (go-mode . ("gopls"))
+;	  (haskell-mode . ("haskell-language-server-wrapper" "--lsp" "--debug"))
+;	  (csharp-mode . ("omnisharp" "-lsp"))
           ))
-  (add-hook 'c-mode-hook 'eglot-ensure)
-  (add-hook 'c++-mode-hook 'eglot-ensure)
-  (add-hook 'python-mode-hook 'eglot-ensure)
-  (add-hook 'nim-mode 'eglot-ensure))
+  (setq eldoc-echo-area-prefer-doc-buffer t))
 
-(use-package geiser-gauche)
+;;;(use-package geiser-gauche)
 
 (use-package haskell-mode)
 
@@ -157,9 +163,11 @@
 (cond
  ((string-equal "windows-nt" system-type) ; TODO check for a blank file in home instead to see if this is my "home" pc
   (progn
-    (setq org-agenda-files '("~/Documents/Roam/Stuff/Timer.org"))
-    (setq org-roam-directory (file-truename "~/Documents/Roam"))
-    (setq org-archive-location (concat org-roam-directory "/Stuff/Done.org::"))))
+    (setq org-agenda-files '("~/Documents/Roam/Timer.org"))
+;    (setq org-roam-directory (file-truename "~/Documents/Roam"))
+    (setq org-archive-location '("~/Documents/Roam/Done.org::"))
+    (toggle-frame-fullscreen)
+    (org-agenda-list)))
  (t ; Default
   (progn
     (add-to-list 'default-frame-alist
